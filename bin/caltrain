@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/caltrain'
+
+Caltrain.run!(ARGV) if $0 == __FILE__
