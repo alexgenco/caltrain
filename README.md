@@ -13,33 +13,63 @@ $ caltrain list sv north
 ```
 ###Stop IDs:
 22nd Street (**22**)
+ 
 Atherton (**ath**)
+ 
 Bayshore (**bsh**)
+ 
 Belmont (**bel**)
+ 
 Blossom Hill (**bhl**)
+ 
 Broadway (**bdw**)
+ 
 Burlingame (**brl**)
+ 
 California Ave (**cal**)
+ 
 Capitol (**cap**)
-College Park       (**clp**)
+ 
+College Park (**clp**)
+ 
 Gilroy (**gil**)
+ 
 Hayward Park (**hay**)
+ 
 Hillsdale (**hil**)
+ 
 Lawrence (**law**)
+ 
 Menlo Park (**men**)
+ 
 Millbrae (**mil**)
+ 
 Morgan Hill (**mrg**)
-Mountain View      (**mv**)
+ 
+Mountain View (**mv**)
+ 
 Palo Alto (**pa**)
+ 
 Redwood City (**rc**)
+ 
 San Antonio (**sa**)
+ 
 San Bruno (**sb**)
+ 
 San Carlos (**scl**)
+ 
 San Francisco (**sf**)
+ 
 San Jose (**sj**)
+ 
 San Martin (**smt**)
+ 
 San Mateo (**sm**)
+ 
 Santa Clara (**sc**)
+ 
 So. San Francisco (**ssf**)
+ 
 Sunnyvale (**sv**)
+ 
 Tamien (**tam**)
