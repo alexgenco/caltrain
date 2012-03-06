@@ -11,40 +11,57 @@ class Caltrain
       times_for_location_and_direction(loc, dir).select { |time| time > now }
     end
 
-    def now
-      Time.now.strftime("%H:%M:%S")
-    end
-
-    def times_for_location(loc)
-      times.select { |line| line[3] =~ /^#{abbrevs[loc]}/ }.map { |i| i[1] }.sort
-    end
-
-    def times_for_direction(dir)
-      times.select { |line| method(:"#{dir}_trips").call.include?(line[0]) }.map { |i| i[1] }.sort
-    end
-
     def times_for_location_and_direction(loc, dir)
       (times_for_location(loc) & times_for_direction(dir)).sort
     end
 
+    def times_for_location(loc)
+      times.select { |line| line[3] =~ /^#{abbrevs[loc]}/ }.map { |i| i[1] }
+    end
+
+    def times_for_direction(dir)
+      times.select { |line| method(:"#{dir}_trips").call.include?(line[0]) }.map { |i| i[1] }
+    end
+
     def times
-      @times ||= File.read(TIMES_PATH).split(/[\n\r]+/)[1..-1].map { |line| line.gsub('"', '').split(/,+/) }
+      @times ||= all_times.select { |line| trip_ids.include?(line[0]) }
+    end
+
+    def now
+      Time.now.strftime("%H:%M:%S")
+    end
+
+    def all_times
+      @all_times ||= File.read(TIMES_PATH).split(/[\n\r]+/)[1..-1].map { |line| line.gsub('"', '').split(/,+/) }
+    end
+
+    def trip_ids
+      trips.map(&:first)
+    end
+
+    # this takes into account the day of the week
+    def trips
+      @trips ||= all_trips.select { |trip| trip[2] =~ (weekend? ? /^WE/ : /^WD/) }
+    end
+
+    def weekend?
+      (Time.now.saturday? || Time.now.sunday?)
+    end
+
+    def all_trips
+      @all_trips ||= File.read(TRIPS_PATH).split(/[\n\r]+/)[1..-1].map { |line| line.gsub('"', '').split(/,+/) }.sort
     end
 
     def north_trips
-      @north_trips ||= trips.select { |arr| arr[4] == "0" }.map { |i| i[0] }
+      @north_trips ||= trips.select { |arr| arr[4] == '0' }.map { |i| i[0] }
     end
 
     def south_trips
-      @south_trips ||= trips.select { |arr| arr[4] == "1" }.map { |i| i[0] }
-    end
-
-    def trips
-      @trips ||= File.read(TRIPS_PATH).split(/[\n\r]+/)[1..-1].map { |line| line.gsub('"', '').split(/,+/) }
+      @south_trips ||= trips.select { |arr| arr[4] == '1' }.map { |i| i[0] }
     end
 
     def abbrevs
-      @abbrevs ||= {
+      {
         :tt  => "22nd Street",
         :ath => "Atherton",
         :bsh => "Bayshore",
