@@ -2,4 +2,4 @@
 
 require 'caltrain'
 
-Caltrain.run!(ARGV) if $0 == __FILE__
+Caltrain.run!(ARGV)
