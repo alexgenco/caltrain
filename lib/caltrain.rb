@@ -1,6 +1,6 @@
 class Caltrain
-  TIMES_PATH = File.expand_path('../../data/google_transit/stop_times.txt', __FILE__)
-  TRIPS_PATH = File.expand_path('../../data/google_transit/trips.txt', __FILE__)
+  TIMES_PATH = 'data/google_transit/stop_times.txt'
+  TRIPS_PATH = 'data/google_transit/trips.txt'
 
   class << self
     def upcoming_departures(loc, dir)
