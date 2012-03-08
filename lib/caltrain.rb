@@ -3,61 +3,44 @@ class Caltrain
   TRIPS_PATH = File.expand_path('../../data/google_transit/trips.txt', __FILE__)
 
   class << self
-    def next_trip(loc, dir)
-      times_for_location_and_direction(loc, dir).find { |time| time > now }
+    def upcoming_departures(loc, dir)
+      times(loc, dir).select { |time| time > now }.sort
     end
 
-    def upcoming_trips(loc, dir)
-      times_for_location_and_direction(loc, dir).select { |time| time > now }
+    def next_departure(loc, dir)
+      times(loc, dir).find { |time| time > now }
     end
 
-    def times_for_location_and_direction(loc, dir)
-      (times_for_location(loc) & times_for_direction(dir)).sort
+    def times(loc, dir)
+      @times ||= times_for_location(loc).select { |line| trip_ids_for_direction(dir).include?(line[0]) }.map {|i| i[1]}.sort
+    end
+
+    def trip_ids_for_direction(dir)
+      @trip_ids_for_direction ||= trips_for_time_of_week.select {|trip| trip[4] == (dir == :north ? '0' : '1') }.map(&:first)
+    end
+
+    def trips_for_time_of_week
+      @trips_for_time_of_week ||= all_trips.select { |trip| trip[2] =~ (weekend? ? /^WE/ : /^WD/) }
     end
 
     def times_for_location(loc)
-      times.select { |line| line[3] =~ /^#{abbrevs[loc]}/ }.map { |i| i[1] }
-    end
-
-    def times_for_direction(dir)
-      times.select { |line| method(:"#{dir}_trips").call.include?(line[0]) }.map { |i| i[1] }
-    end
-
-    def times
-      @times ||= all_times.select { |line| trip_ids.include?(line[0]) }
-    end
-
-    def now
-      Time.now.strftime("%H:%M:%S")
+      @times_for_location ||= all_times.select { |arr| arr[3] =~ /^#{abbrevs[loc]}/ }
     end
 
     def all_times
       @all_times ||= File.read(TIMES_PATH).split(/[\n\r]+/)[1..-1].map { |line| line.gsub('"', '').split(/,+/) }
     end
 
-    def trip_ids
-      trips.map(&:first)
-    end
-
-    # this takes into account the day of the week
-    def trips
-      @trips ||= all_trips.select { |trip| trip[2] =~ (weekend? ? /^WE/ : /^WD/) }
-    end
-
-    def weekend?
-      (Time.now.saturday? || Time.now.sunday?)
-    end
-
     def all_trips
       @all_trips ||= File.read(TRIPS_PATH).split(/[\n\r]+/)[1..-1].map { |line| line.gsub('"', '').split(/,+/) }.sort
     end
 
-    def north_trips
-      @north_trips ||= trips.select { |arr| arr[4] == '0' }.map { |i| i[0] }
+    def weekend?
+      @weekend ||= (Time.now.saturday? || Time.now.sunday?)
     end
 
-    def south_trips
-      @south_trips ||= trips.select { |arr| arr[4] == '1' }.map { |i| i[0] }
+    def now
+      @now ||= Time.now.strftime('%H:%M:%S')
     end
 
     def abbrevs
@@ -115,7 +98,12 @@ class Caltrain
     end
 
     def actions
-      { :list => :upcoming_trips, :next => :next_trip }
+      { :list => :upcoming_departures, :next => :next_departure }
+    end
+
+    def clean!
+      instance_variables.each { |i| instance_variable_set(i, nil) }
+      true
     end
 
     def run!(args)
