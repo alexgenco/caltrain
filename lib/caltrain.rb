@@ -1,8 +1,17 @@
 class Caltrain
-  TIMES_PATH = 'data/google_transit/stop_times.txt'
-  TRIPS_PATH = 'data/google_transit/trips.txt'
-
   class << self
+    def base_dir
+      File.expand_path('..', File.dirname(__FILE__))
+    end
+
+    def times_path
+      "#{base_dir}/data/google_transit/stop_times.txt"
+    end
+
+    def trips_path
+      "#{base_dir}/data/google_transit/trips.txt"
+    end
+
     def upcoming_departures(loc, dir)
       times(loc, dir).select { |time| time > now }.sort
     end
@@ -28,11 +37,11 @@ class Caltrain
     end
 
     def all_times
-      @all_times ||= File.read(TIMES_PATH).split(/[\n\r]+/)[1..-1].map { |line| line.gsub('"', '').split(/,+/) }
+      @all_times ||= File.read(times_path).split(/[\n\r]+/)[1..-1].map { |line| line.gsub('"', '').split(/,+/) }
     end
 
     def all_trips
-      @all_trips ||= File.read(TRIPS_PATH).split(/[\n\r]+/)[1..-1].map { |line| line.gsub('"', '').split(/,+/) }.sort
+      @all_trips ||= File.read(trips_path).split(/[\n\r]+/)[1..-1].map { |line| line.gsub('"', '').split(/,+/) }.sort
     end
 
     def weekend?

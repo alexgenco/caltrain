@@ -9,6 +9,10 @@ describe Caltrain do
 
   after { Caltrain.clean! }
 
+  it 'has a base directory' do
+    Caltrain.base_dir.must_equal(File.expand_path('..', File.dirname(__FILE__)))
+  end
+
   describe 'trips' do
     it 'should parse trips.txt depending on the day of the week' do
       Caltrain.all_trips.first.must_equal(['101_20110701','ct_local_20110701','WD_20110701','San Francisco (Train 101)','0','cal_sj_sf'])
