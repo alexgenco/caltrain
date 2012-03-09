@@ -1,4 +1,5 @@
 .rvmrc
 *.swp
 caltrain.gemspec
+old_gems/*
 *.gem
