@@ -1,3 +1,6 @@
+require 'caltrain/data_parser'
+require 'caltrain/trip'
+
 class Caltrain
   class << self
     def base_dir
@@ -29,27 +32,27 @@ class Caltrain
     end
 
     def trips_for_time_of_week
-      @trips_for_time_of_week ||= all_trips.select { |trip| trip[2] =~ (weekend? ? /^WE/ : /^WD/) }
+      @trips_for_time_of_week ||= trip_data.select { |trip| trip[2] =~ (weekend? ? /^WE/ : /^WD/) }
     end
 
     def times_for_location(loc)
-      @times_for_location ||= all_times.select { |arr| arr[3] =~ /^#{abbrevs[loc]}/ }
+      @times_for_location ||= time_data.select { |arr| arr[3] =~ /^#{abbrevs[loc]}/ }
     end
 
-    def all_times
-      @all_times ||= File.read(times_path).split(/[\n\r]+/)[1..-1].map { |line| line.gsub('"', '').split(/,+/) }
+    def time_data
+      DataParser.parse(times_path)
     end
 
-    def all_trips
-      @all_trips ||= File.read(trips_path).split(/[\n\r]+/)[1..-1].map { |line| line.gsub('"', '').split(/,+/) }.sort
+    def trip_data
+      @trip_data ||= DataParser.parse(trips_path).sort
     end
 
     def weekend?
-      @weekend ||= (Time.now.saturday? || Time.now.sunday?)
+      Time.now.saturday? || Time.now.sunday?
     end
 
     def now
-      @now ||= Time.now.strftime('%H:%M:%S')
+      Time.now.strftime('%H:%M:%S')
     end
 
     def abbrevs

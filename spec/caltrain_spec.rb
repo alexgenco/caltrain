@@ -1,9 +1,3 @@
-require 'minitest/autorun'
-require 'minitest/pride'
-require 'mocha'
-
-require File.expand_path('../lib/caltrain', File.dirname(__FILE__))
-
 describe Caltrain do
   before { Caltrain.stubs(:weekend?).returns(false) }
 
@@ -13,18 +7,7 @@ describe Caltrain do
     Caltrain.base_dir.must_equal(File.expand_path('..', File.dirname(__FILE__)))
   end
 
-  describe 'trips' do
-    it 'should parse trips.txt depending on the day of the week' do
-      Caltrain.all_trips.first.must_equal(['101_20110701','ct_local_20110701','WD_20110701','San Francisco (Train 101)','0','cal_sj_sf'])
-    end
-  end
-
   describe 'times' do
-    it 'should parse stop_times.txt correctly' do
-      line = ['280_20110701','18:50:00','18:50:00','Mountain View Caltrain','10']
-      Caltrain.all_times.must_include(line)
-    end
-
     it 'should return times for a location' do
       ['16:58:00', '08:13:00', '19:44:00'].each do |time|
         Caltrain.times_for_location(:sv).map {|i| i[1]}.must_include(time)
