@@ -3,3 +3,5 @@
 caltrain.gemspec
 old_gems/*
 *.gem
+.test
+Gemfile.lock
