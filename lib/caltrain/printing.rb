@@ -1,7 +1,7 @@
 module Printing
   def print_trip(trip, time, options={})
-    start = options.delete(:starting_at)
-    output = options.delete(:output) || $stdout
+    start = options[:starting_at]
+    output = options[:output] || $stdout
 
     output << train_info(trip, time) << "\n"
     output << "  " << stop_info(trip, start) << "\n"

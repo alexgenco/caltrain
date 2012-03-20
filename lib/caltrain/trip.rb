@@ -16,7 +16,7 @@ class Trip
 
     def trips(dir=nil)
       @trips ||= []
-      dir ? @trips.select { |trip| trip.direction == dir } : @trips
+      [:north, :south].include?(dir) ? @trips.select { |trip| trip.direction == dir } : @trips
     end
 
     def weekend(dir=nil)
@@ -42,7 +42,7 @@ class Trip
     end
 
     def <<(trip)
-      trips << trip unless trips.map(&:trip_id).include?(trip.trip_id)
+      @trips << trip unless trips.map(&:trip_id).include?(trip.trip_id)
     end
   end
 

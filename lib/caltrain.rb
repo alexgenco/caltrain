@@ -43,8 +43,8 @@ module Caltrain
       else
         raise
       end
-    #rescue
-      #usage
+    rescue
+      usage
     end
 
     private

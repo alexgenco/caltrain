@@ -25,11 +25,21 @@ module Schedule
     end
 
     def trips_with_times(loc, dir)
-      @trips_with_times ||= Trip.trips(dir).map do |trip|
+      @trips_with_times ||= trips_for_today(dir).map do |trip|
         if time = trip.time_at_location(loc)
           [trip, time]
         end
       end.compact.sort_by_nth(1)
+    end
+
+    def trips_for_today(dir)
+      if weekend?
+        Trip.weekend(dir)
+      elsif saturday?
+        Trip.saturday_only(dir)
+      else
+        Trip.weekday(dir)
+      end
     end
 
     def now
