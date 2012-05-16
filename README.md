@@ -2,14 +2,15 @@
 ---
 ###Usage:
 ```bash
-$ caltrain next sf south
-# => 6:56 PM
+$ caltrain sv south next
+# => 22:53:00 - Train 194 (local)
+#  *sv -> law -> sc -> sj -> tam
 
-$ caltrain list sv north
-# => 3:25 PM
-#    4:01 PM
-#    4:25 PM
-#    ...
+$ caltrain pa south list
+# => 23:36:00 - Train 196 (local)
+#    *pa -> cal -> sa -> mv -> sv -> law -> sc -> sj
+#  24:57:00 - Train 198 (local)
+#    *pa -> cal -> sa -> mv -> sv -> law -> sc -> sj
 ```
 ###Stop IDs:
 22nd Street (**22**)
