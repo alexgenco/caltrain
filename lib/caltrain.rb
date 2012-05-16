@@ -31,6 +31,7 @@ module Caltrain
 
     def run!(args)
       loc, dir, act = *args
+      usage unless loc && dir
       loc = loc.to_sym
       act = :next unless act
 
@@ -41,10 +42,10 @@ module Caltrain
       elsif dir =~ /^s/i
         Schedule.method(act).call(loc, :south)
       else
-        raise
+        raise("#{dir} is not a recognized direction")
       end
-    rescue
-      usage
+    rescue => e
+      puts "Error: #{e}"
     end
 
     private

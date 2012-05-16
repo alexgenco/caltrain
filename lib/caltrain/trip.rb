@@ -80,7 +80,7 @@ class Trip
   end
 
   def stops(dir=@direction)
-    @stops ||= Schedule.abbrevs.select { |_, v| time_data.map_nth(3).any? { |d| d =~ /^#{v}/ }  }.keys
+    @stops ||= Schedule.stop_order.select { |stop| time_data.map_nth(3).any? { |d| d =~ /^#{Schedule.abbrevs[stop]}/ }  }
     dir == :north ? @stops : @stops.reverse
   end
 end

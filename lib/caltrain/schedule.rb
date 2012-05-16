@@ -19,6 +19,7 @@ module Schedule
 
     def next(loc, dir, output=$stdout)
       trip = trips_with_times(loc, dir).find { |_, time| time > now }
+      raise("No trips found!") unless trip
       options = {:output => output, :starting_at => loc}
 
       print_trip(trip.first, trip.last, options)
@@ -47,11 +48,15 @@ module Schedule
     end
 
     def weekend?
-      saturday? || Time.now.sunday?
+      saturday? || sunday?
+    end
+
+    def sunday?
+      Time.now.strftime("%A") == "Sunday"
     end
 
     def saturday?
-      Time.now.saturday?
+      Time.now.strftime("%A") == "Saturday"
     end
 
     def abbrevs
@@ -88,6 +93,15 @@ module Schedule
         :tt  => "22nd Street",
         :sf  => "San Francisco"
       }.freeze
+    end
+
+    # for 1.8 support :/
+    def stop_order
+      @stop_order ||= [
+        :gil, :smt, :mrg, :bhl, :cap, :tam, :sj, :clp, :sc, :law, :sv,
+        :mv, :sa, :cal, :pa, :men, :ath, :rc, :scl, :bel, :hil, :hay, :sm,
+        :brl, :bdw, :mil, :sb, :ssf, :bsh, :tt, :sf
+      ].freeze
     end
   end
 end
