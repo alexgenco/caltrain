@@ -10,17 +10,17 @@ module Schedule
       @data ||= DataParser.parse(times_path)
     end
 
-    def list(loc, dir, output=$stdout)
+    def list(loc, dir, output=$stdout, detailed=false)
       trips = trips_with_times(loc, dir).select { |_, time| time > now }
-      options = {:output => output, :starting_at => loc}
+      options = {:output => output, :starting_at => loc, :detailed => detailed}
 
       trips.each { |trip, time| print_trip(trip, time, options) }
     end
 
-    def next(loc, dir, output=$stdout)
+    def next(loc, dir, output=$stdout, detailed=false)
       trip = trips_with_times(loc, dir).find { |_, time| time > now }
       raise("No trips found!") unless trip
-      options = {:output => output, :starting_at => loc}
+      options = {:output => output, :starting_at => loc, :detailed => detailed}
 
       print_trip(trip.first, trip.last, options)
     end

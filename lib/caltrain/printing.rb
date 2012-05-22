@@ -2,9 +2,13 @@ module Printing
   def print_trip(trip, time, options={})
     start = options[:starting_at]
     output = options[:output] || $stdout
+    detailed = (options[:detailed] == true)
 
     output << train_info(trip, time) << "\n"
-    output << "  " << stop_info(trip, start) << "\n"
+
+    if detailed
+      output << "  " << stop_info(trip, start) << "\n"
+    end
   end
 
   def train_info(trip, time)

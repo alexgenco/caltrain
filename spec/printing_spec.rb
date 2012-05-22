@@ -18,6 +18,12 @@ describe Printing do
   it 'should output properly' do
     lambda { print_trip(@trip, '10:00:00', :starting_at => :sv) }.must_output(<<-OUTPUT)
 10:00:00 - Train 449 (local)
+    OUTPUT
+  end
+
+  it 'should output detailed view' do
+    lambda { print_trip(@trip, '10:00:00', :starting_at => :sv, :detailed => true) }.must_output(<<-OUTPUT)
+10:00:00 - Train 449 (local)
   *sv -> mv -> sa -> cal -> pa -> men -> ath -> rc -> scl -> bel -> hil -> hay -> sm -> brl -> bdw -> mil -> sb -> ssf -> bsh -> tt -> sf
     OUTPUT
   end

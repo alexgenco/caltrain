@@ -15,7 +15,7 @@ module Caltrain
 
     def usage
       puts "Usage:"
-      puts "  caltrain <location> <direction> [ list | next ]"
+      puts "  caltrain <location> <direction> [ list | next ] [ --stops ]"
       puts ""
       puts "Abbreviations:"
       pretty_hash(Schedule.abbrevs)
@@ -34,13 +34,14 @@ module Caltrain
       usage unless loc && dir
       loc = loc.to_sym
       act = :next unless act
+      detailed = args.include?('--stops')
 
       populate_trips!
 
       if dir =~ /^n/i
-        Schedule.method(act).call(loc, :north)
+        Schedule.method(act).call(loc, :north, $stdout, detailed)
       elsif dir =~ /^s/i
-        Schedule.method(act).call(loc, :south)
+        Schedule.method(act).call(loc, :south, $stdout, detailed)
       else
         raise("#{dir} is not a recognized direction")
       end
